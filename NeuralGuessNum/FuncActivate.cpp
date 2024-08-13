@@ -63,3 +63,24 @@ void FuncActivate::useDer(double* value, int n) {
 		break;
 	}
 }
+double FuncActivate::useDer(double value) {
+	switch (actFunc) {
+	case funcActivate::sigmoid:
+		value =  1 / (1 + exp(-value));
+		break;
+	case funcActivate::ReLU:
+		if (value < 0 || value > 1)
+			value = 0.01;
+		break;
+	case funcActivate::thx:
+			if (value < 0)
+				value = 0.01 * (exp(value) - exp(-value)) / (exp(value) + exp(-value));
+			else
+				value = (exp(value) - exp(-value)) / (exp(value) + exp(-value));
+		break;
+	default: throw std::runtime_error("Error activate der function\n");
+		break;
+	}
+	return value;
+}
+ 

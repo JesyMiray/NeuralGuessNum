@@ -5,7 +5,8 @@ using namespace std;
 
 
 struct data_Network {
-
+	int L;
+	int* size;
 };
 
 class Network {
@@ -19,6 +20,14 @@ class Network {
 
 public:
 	void Init(data_Network data);
-
+	void PrintConfig();
+	void SetInput(double* values);
+	double ForwardFeed();
+	int SearchMaxIndex(double* value);
+	void PrintValues(int L);
+	void BackPropogation(double expect);
+	void WeightUpdater(double lr);
+	void SaveWeights();
+	void ReadWeights();
 };
 
