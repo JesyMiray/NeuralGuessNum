@@ -1,6 +1,7 @@
 #pragma once
 #include "FuncActivate.h"
 #include "Matrix.h"
+#include <fstream>
 using namespace std;
 
 

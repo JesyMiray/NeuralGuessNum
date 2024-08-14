@@ -44,3 +44,19 @@ void Matrix::SumVec(double* a, double* b, int n) {
 double& Matrix::operator()(int i, int j) {
 	return matrix[i][j];
 }
+std::ostream& operator << (std::ostream& os, const Matrix& m) {
+	for (int i = 0; i < m.row; ++i) {
+		for (int j = 0; j < m.column; j++) {
+			os << m.matrix[i][j] << " ";
+		}
+	}
+	return os;
+}
+std::istream& operator >> (std::istream& is, Matrix& m) {
+	for (int i = 0; i < m.row; ++i) {
+		for (int j = 0; j < m.column; j++) {
+			is >> m.matrix[i][j];
+		}
+	}
+	return is;
+}

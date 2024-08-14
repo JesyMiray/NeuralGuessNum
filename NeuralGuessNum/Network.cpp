@@ -65,8 +65,68 @@ void Network::PrintValues(int L) {
 	for (int j = 0; j < size[L]; j++)
 		cout << j << " " << neurons_val[L][j] << endl; 
 }
+void Network::BackPropogation(double expect) {
+	for (int i = 0; i < size[L - 1]; i++) {
+		if (i != int(expect))
+			neurons_err[L - 1][i] = -neurons_val[L - 1][i] * actFunc.useDer(neurons_val[L - 1][i]);
+		else
+			neurons_err[L - 1][i] = (1.0 - neurons_val[L - 1][i]) * actFunc.useDer(neurons_val[L - 1][i]);
+	}
+	for (int k = L - 2; k > 0; k--) {
+		Matrix::MatMultiT(weights[k], neurons_err[k + 1], neurons_err[k], size[k + 1]);
+		for (int j = 0; j < size[k]; j++)
+			neurons_err[k][j] *= actFunc.useDer(neurons_val[k][j]);
+	}
+}
+void Network::WeightUpdater(double lr) {
+	for (int i = 0; i < L - 1; ++i) {
+		for (int j = 0; j < size[i + 1]; ++j) {
+			for (int k = 0; k < size[i]; ++k) {
+				weights[i](j, k) += neurons_val[i][k] * neurons_err[i + 1][j] * lr;
+			}
+		}
+	}
+	for (int i = 0; i < L - 1; i++) {
+		for (int k = 0; k < size[i + 1]; k++) {
+			bios[i][k] += neurons_err[i + 1][k] * lr;
+		}
+	}
+}
+void Network::SaveWeights() {
+	ofstream fout;
+	fout.open("Weights.txt");
+	if (!fout.is_open()) {
+		cout << "Error reading file";
+		system("pause");
+	}
+	for (int i = 0; i < L - 1; ++i)
+		fout << weights[i] << " ";
 
-
+	for (int i = 0; i < L - 1; ++i) {
+		for (int j = 0; j < size[i + 1]; ++j) {
+			fout << bios[i][j] << " ";
+		}
+	}
+	cout << "Weights saved \n";
+	fout.close();
+}
+void Network::ReadWeights() {
+	ifstream fin;
+	fin.open("Weights.txt");
+	if (!fin.is_open()) {
+		cout << "Error reading file";
+		system("pause");
+	}
+	for (int i = 0; i < L - 1; ++i)
+		fin >> weights[i];
+	for (int i = 0; i < L - 1; ++i) {
+		for (int j = 0; j < size[i + 1]; ++j) {
+			fin >> bios[i][j];
+		}
+	}
+	cout << "Weights readed \n";
+	fin.close();
+}
 
 
 
